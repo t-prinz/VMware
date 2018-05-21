@@ -1,0 +1,55 @@
+---
+- name: Play to provision guest in VMware
+  hosts: localhost
+  gather_facts:  False
+  vars_files:
+    - vars/vmware_vars.yml
+
+  tasks:
+
+  - name: Clone a VM from Template and customize
+    vmware_guest:
+      hostname: "{{ vmware_hostname }}"
+      username: "{{ vmware_username }}"
+      password: "{{ vmware_password }}"
+      validate_certs: no
+      datacenter: DC01
+      cluster: Cluster01
+      name: ans-test
+      template: rhel7-single-nic-template
+      networks:
+      - name: VM Network
+        type: dhcp
+
+#  - name: Clone a VM from Template and customize
+#    vmware_guest:
+#      hostname: XXX.XXX.XXX.XXX
+#      username: XXX
+#      password: XXX
+#      validate_certs: no
+#      datacenter: datacenter1
+#      cluster: cluster
+#      name: testvm-2
+#      template: template_windows
+#      networks:
+#      - name: VM Network
+#        ip: 192.168.1.100
+#        netmask: 255.255.255.0
+#        gateway: 192.168.1.1
+#        mac: aa:bb:dd:aa:00:14
+#        domain: my_domain
+#        dns_servers:
+#        - 192.168.1.1
+#        - 192.168.1.2
+#      - vlan: 1234
+#        type: dhcp
+#      customization:
+#        autologon: yes
+#        dns_servers:
+#        - 192.168.1.1
+#        - 192.168.1.2
+#        domain: my_domain
+#        password: XXX
+#        runonce:
+#        - powershell.exe -ExecutionPolicy Unrestricted -File C:\Windows\Temp\ConfigureRemotingForAnsible.ps1 -ForceNewSSLCert -EnableCredSSP
+#    delegate_to: localhost
